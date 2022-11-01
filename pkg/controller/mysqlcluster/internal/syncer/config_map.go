@@ -251,6 +251,9 @@ var mysql8xConfigs = map[string]string{
 
 	// use 5.7 auth plugin to be backward compatible
 	"default-authentication-plugin": "mysql_native_password",
+	// mysql8.0
+	"innodb_data_home_dir":      "/var/lib/mysql",
+	"innodb_log_group_home_dir": "/var/lib/mysql",
 }
 
 var mysqlMasterSlaveBooleanConfigs = []string{

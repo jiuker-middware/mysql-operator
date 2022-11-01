@@ -1,0 +1,34 @@
+FROM release-ci.daocloud.io/mcamel/mysql-operator-sidecar-5.7-arm64:v0.1.53 as all
+
+FROM centos:8.3.2011
+
+USER root
+
+RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*\
+    && yum makecache
+RUN yum install -y perl perl-DBI perl-DBD-MySQL
+
+COPY rootfs/ /
+
+COPY --from=all /usr/local/ /usr/local/
+
+COPY --from=all /usr/lib64/ /usr/lib64/
+
+RUN usermod -u 994 systemd-coredump
+RUN groupmod -g 994 systemd-coredump
+RUN groupmod -g 993 input
+
+RUN groupadd -g 999 mysql
+RUN useradd -u 999 -r -g 999 -s /sbin/nologin \
+    -c "Default Application User" mysql
+
+RUN chown 999.999 /usr/local/bin/docker-entrypoint.sh
+RUN chown 999.999 /usr/local/bin/mysql-operator-sidecar
+RUN chown 999.999 /usr/local/bin/rclone
+
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENV PATH=$PATH:/usr/local/xtrabackup/bin/
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
