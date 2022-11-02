@@ -1,9 +1,10 @@
-FROM golang:1.19.2 as builder
+FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
 
+
+
 RUN apt update -y
-RUN apt upgrade -y
 
 RUN apt install -y wget gcc unzip
 ENV GOPROXY=https://goproxy.cn
@@ -29,15 +30,17 @@ WORKDIR /build/dockerize-master
 RUN CGO_ENABLED=0 go build  -o /usr/local/bin/dockerize
 
 
-FROM ubuntu:20.04
+FROM --platform=$TARGETPLATFORM ubuntu:20.04
 #SHELL ["/busybox/sh", "-c"]
 
 # switch to root for installing software
 USER root
 
+
+
+
 #
 RUN apt update -y
-RUN apt upgrade -y
 
 RUN apt install -y sqlite3 libsqlite3-dev wget
 
@@ -58,6 +61,7 @@ COPY --from=builder /usr/local/bin/dockerize /usr/local/bin/dockerize
 RUN chmod +x /usr/local/bin/dockerize
 RUN chmod +x /usr/local/bin/orc-helper
 RUN chmod +x /usr/local/orchestrator/orchestrator
+
 
 
 WORKDIR /etc/orchestrator

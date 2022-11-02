@@ -2,9 +2,10 @@
 #  Docker image for sidecar containers
 ###############################################################################
 
-FROM golang:1.19.2 as builder
+FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
+
 
 RUN apt update -y
 RUN apt upgrade -y
@@ -21,9 +22,10 @@ RUN go mod tidy
 RUN CGO_ENABLED=0 go build  -o /mysql-operator-sidecar  cmd/mysql-operator-sidecar/main.go
 
 
-FROM centos:8.3.2011
+FROM --platform=$TARGETPLATFORM centos:8.3.2011 as all
 
 USER root
+
 
 COPY rootfs/ /
 
@@ -38,6 +40,20 @@ RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d
 
 RUN yum update -y
 RUN yum install -y unzip wget
+
+#rclone
+#RUN export RCLONE_VERSION=1.57.0
+#RUN wget -nv https://github.com/ncw/rclone/releases/download/v1.57.0/rclone-v1.57.0-linux-${ARCH}.zip
+#RUN unzip rclone-*-linux-${ARCH}.zip
+#RUN mv rclone-*-linux-${ARCH}/rclone /usr/local/bin/
+#RUN chmod 755 /usr/local/bin/rclone
+#RUN rm -r rclone-*-linux-arm64 rclone-*-linux-${ARCH}.zip
+
+RUN curl https://rclone.org/install.sh | bash
+
+RUN cp /usr/bin/rclone /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/rclone
 
 # percona-xtrabackup
 WORKDIR /build
@@ -71,13 +87,6 @@ WORKDIR /build
 RUN make -j4
 RUN make install
 
-RUN export RCLONE_VERSION=1.57.0
-RUN wget -nv https://github.com/ncw/rclone/releases/download/v1.57.0/rclone-v1.57.0-linux-arm64.zip
-RUN unzip rclone-*-linux-arm64.zip
-RUN mv rclone-*-linux-arm64/rclone /usr/local/bin/
-RUN chmod 755 /usr/local/bin/rclone
-RUN rm -r rclone-*-linux-arm64 rclone-*-linux-arm64.zip
-
 COPY --from=builder /mysql-operator-sidecar /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/mysql-operator-sidecar
@@ -95,6 +104,10 @@ RUN make install
 
 RUN yum -y install perl-DBI
 RUN yum -y install perl-DBD-MySQL
+
+
+
+
 
 RUN usermod -u 994 systemd-coredump
 RUN groupmod -g 994 systemd-coredump
@@ -116,3 +129,39 @@ ENV PATH=$PATH:/usr/local/xtrabackup/bin/
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
+FROM --platform=$TARGETPLATFORM centos:8.3.2011
+
+USER root
+
+
+
+RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*\
+    && yum makecache
+RUN yum install -y perl perl-DBI perl-DBD-MySQL
+
+COPY rootfs/ /
+
+COPY --from=all /usr/local/ /usr/local/
+
+COPY --from=all /usr/lib64/ /usr/lib64/
+
+RUN usermod -u 994 systemd-coredump
+RUN groupmod -g 994 systemd-coredump
+RUN groupmod -g 993 input
+
+RUN groupadd -g 999 mysql
+RUN useradd -u 999 -r -g 999 -s /sbin/nologin \
+    -c "Default Application User" mysql
+
+RUN chown 999.999 /usr/local/bin/docker-entrypoint.sh
+RUN chown 999.999 /usr/local/bin/mysql-operator-sidecar
+RUN chown 999.999 /usr/local/bin/rclone
+
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENV PATH=$PATH:/usr/local/xtrabackup/bin/
+
+
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
