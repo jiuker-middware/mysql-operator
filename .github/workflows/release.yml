@@ -20,6 +20,8 @@ jobs:
         with:
           username: ${{ env.DOCKER_REPO }}
           password: ${{ env.DOCKER_PASS }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.0.0
       - name: mysql-operator
