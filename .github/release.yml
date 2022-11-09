@@ -1,0 +1,88 @@
+name: Release
+on:
+  push:
+    tags:
+    - 'v*.*.*'
+env:
+  DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  BUILD_PLATFORM: linux/amd64,linux/arm64
+jobs:
+  build_and_push_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ env.DOCKER_REPO }}
+          password: ${{ env.DOCKER_PASS }}
+      - name: mysql-operator
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./
+          file: ./arm64/images/mysql-operator/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.DOCKER_REPO }}/mysql-operator:${{ github.ref_name }}
+            ${{ env.DOCKER_REPO }}/mysql-operator:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: mysql-operator-orchestrator
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./
+          file: ./arm64/images/mysql-operator-orchestrator/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.DOCKER_REPO }}/mysql-operator-orchestrator:${{ github.ref_name }}
+            ${{ env.DOCKER_REPO }}/mysql-operator-orchestrator:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: mysql-operator-sidecar-5.7
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./
+          file: ./arm64/images/mysql-operator-sidecar-5.7/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.DOCKER_REPO }}/mysql-operator-sidecar-5.7:${{ github.ref_name }}
+            ${{ env.DOCKER_REPO }}/mysql-operator-sidecar-5.7:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: mysql-operator-sidecar-8.0
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./
+          file: ./arm64/images/mysql-operator-sidecar-8.0/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.DOCKER_REPO }}/mysql-operator-sidecar-8.0:${{ github.ref_name }}
+            ${{ env.DOCKER_REPO }}/mysql-operator-sidecar-8.0:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  helm_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+      - name: Generate Helm charts
+        run: |
+          helm package ./deploy/charts/mysql-operator -d ./dist --version ${{ github.ref_name }}
+      - name: Release and upload packages
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            ./dist/mysql-operator-${{ github.ref_name }}.tgz
