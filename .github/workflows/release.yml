@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./
-          file: ./arm64/images/mysql-operator/Dockerfile
+          file: ./arm64/images/mysql-operator/Release-Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
@@ -41,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./
-          file: ./arm64/images/mysql-operator-orchestrator/Dockerfile
+          file: ./arm64/images/mysql-operator-orchestrator/Release-Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./
-          file: ./arm64/images/mysql-operator-sidecar-5.7/Dockerfile
+          file: ./arm64/images/mysql-operator-sidecar-5.7/Release-Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./
-          file: ./arm64/images/mysql-operator-sidecar-8.0/Dockerfile
+          file: ./arm64/images/mysql-operator-sidecar-8.0/Release-Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
