@@ -18,7 +18,7 @@ RUN go mod tidy
 RUN CGO_ENABLED=0 go build  -o /mysql-operator-sidecar  cmd/mysql-operator-sidecar/main.go
 
 
-FROM --platform=$TARGETPLATFORM jiuker/mysql-operator-sidecar-5.7:0.6.2
+FROM --platform=$TARGETPLATFORM jiuker/mysql-operator-sidecar-5.7:v0.6.2
 #SHELL ["/busybox/sh", "-c"]
 USER root
 COPY --from=builder /mysql-operator-sidecar /mysql-operator-sidecar

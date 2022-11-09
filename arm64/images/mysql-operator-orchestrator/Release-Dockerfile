@@ -18,7 +18,7 @@ RUN go mod tidy
 RUN CGO_ENABLED=0 go build  -o /usr/local/bin/orc-helper  cmd/orc-helper/main.go
 
 
-FROM --platform=$TARGETPLATFORM jiuker/mysql-operator-orchestrator:0.6.2
+FROM --platform=$TARGETPLATFORM jiuker/mysql-operator-orchestrator:v0.6.2
 #SHELL ["/busybox/sh", "-c"]
 USER root
 COPY --from=builder /usr/local/bin/orc-helper /usr/local/bin/orc-helper
