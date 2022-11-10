@@ -67,7 +67,7 @@ jobs:
             ${{ env.ONLINE_REGISTER }}/mysql-operator-orchestrator:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  mysql-operator-sidecar-5.7:
+  mysql-operator-sidecar-5—7:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
@@ -97,7 +97,7 @@ jobs:
             ${{ env.ONLINE_REGISTER }}/mysql-operator-sidecar-5.7:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  mysql-operator-sidecar-8.0:
+  mysql-operator-sidecar-8-0:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
