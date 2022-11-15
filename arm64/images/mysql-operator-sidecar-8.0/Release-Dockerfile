@@ -21,6 +21,7 @@ RUN CGO_ENABLED=0 go build  -o /mysql-operator-sidecar  cmd/mysql-operator-sidec
 FROM --platform=$TARGETPLATFORM jiuker/mysql-operator-sidecar-8.0:v0.6.2
 #SHELL ["/busybox/sh", "-c"]
 USER root
-COPY --from=builder /mysql-operator-sidecar /mysql-operator-sidecar
+COPY --from=builder /mysql-operator-sidecar /usr/local/bin/
 RUN chmod +x /mysql-operator-sidecar
+RUN chown 999.999 /usr/local/bin/mysql-operator-sidecar
 
