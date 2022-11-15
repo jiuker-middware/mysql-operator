@@ -68,6 +68,8 @@ WORKDIR /etc/orchestrator
 WORKDIR /var/lib/orchestrator
 WORKDIR /
 
+WORKDIR "/usr/local/orchestrator"
+
 ENTRYPOINT [ "/usr/local/bin/dockerize", \
              "-no-overwrite", \
              "-template", \

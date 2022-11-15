@@ -24,3 +24,4 @@ USER root
 COPY --from=builder /usr/local/bin/orc-helper /usr/local/bin/orc-helper
 RUN chmod +x /usr/local/bin/orc-helper
 
+WORKDIR "/usr/local/orchestrator"
