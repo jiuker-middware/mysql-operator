@@ -54,12 +54,16 @@ func NewConfigMapSyncer(c client.Client, scheme *runtime.Scheme, cluster *mysqlc
 		if cluster.GetAnnotations() != nil {
 			if v, ok := cluster.GetAnnotations()["rpl_semi_sync_enabled"]; ok {
 				if v == "true" {
-					data += fmt.Sprintf(`
+					half_slave_count := *cluster.Spec.Replicas / 2
+					if half_slave_count != 0 {
+						data += fmt.Sprintf(`
 	plugin-load-add	 = "semisync_master.so;semisync_slave.so"
 	rpl_semi_sync_master_enabled 	=	1
 	rpl_semi_sync_slave_enabled		=	1
 	rpl_semi_sync_master_wait_for_slave_count	=	%d
-	`, (*cluster.Spec.Replicas+1)/2)
+	`, half_slave_count)
+					}
+
 				}
 			}
 		}
