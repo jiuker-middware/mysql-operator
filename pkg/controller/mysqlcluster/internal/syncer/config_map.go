@@ -51,7 +51,7 @@ func NewConfigMapSyncer(c client.Client, scheme *runtime.Scheme, cluster *mysqlc
 		if err != nil {
 			return fmt.Errorf("failed to create mysql configs: %s", err)
 		}
-		if v, ok := cluster.GetLabels()["rpl_enabled"]; ok {
+		if v, ok := cluster.GetLabels()["rpl_semi_sync_enabled"]; ok {
 			if v == "true" {
 				data += fmt.Sprintf(`
 plugin-load-add	 = "semisync_master.so;semisync_slave.so"
