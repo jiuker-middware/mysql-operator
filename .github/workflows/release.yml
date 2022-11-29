@@ -4,7 +4,7 @@ on:
     tags:
     - 'v*.*.*'
 env:
-  ONLINE_REGISTER: ghcr.io/jiuker-middware
+  ONLINE_REGISTER: ghcr.io/ksmartdata
   BUILD_PLATFORM: linux/amd64,linux/arm64
 jobs:
   mysql-operator:

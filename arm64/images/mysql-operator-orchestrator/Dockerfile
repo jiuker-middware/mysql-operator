@@ -17,7 +17,7 @@ WORKDIR /build/orchestrator-master
 RUN CGO_ENABLED=1 go build  -o /usr/local/orchestrator/orchestrator  go/cmd/orchestrator/main.go
 
 WORKDIR /build
-RUN wget -O arm64.zip https://github.com/jiuker-middware/mysql-operator/archive/refs/heads/arm64.zip
+RUN wget -O arm64.zip https://github.com/ksmartdata/mysql-operator/archive/refs/heads/arm64.zip
 RUN unzip arm64.zip
 WORKDIR /build/mysql-operator-arm64
 RUN go mod tidy
