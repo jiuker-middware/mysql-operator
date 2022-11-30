@@ -33,7 +33,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/ot-redis:v6.2.55
+            ${{ env.ONLINE_REGISTER }}/ot-redis:v6.2.56
             ${{ env.ONLINE_REGISTER }}/ot-redis:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
