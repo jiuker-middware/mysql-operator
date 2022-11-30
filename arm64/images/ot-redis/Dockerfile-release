@@ -20,6 +20,4 @@ WORKDIR /data
 
 EXPOSE 6379 6379
 
-COPY nodes.conf /data/nodes.conf
-
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
