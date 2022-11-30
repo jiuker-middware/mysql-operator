@@ -6,9 +6,19 @@ ARG REDIS_VERSION=6.2.5
 
 #https://github.com/redis/redis/archive/refs/tags/6.2.5.tar.gz
 
-RUN /bin/sh -c addgroup -S -g 1001 redis && adduser -S -G redis -u 1001 redis && apk add --no-cache su-exec tzdata make curl build-base linux-headers bash
+RUN addgroup -S -g 1001 redis  \
+    && adduser -S -G redis -u 1001 redis  \
+    && apk add --no-cache su-exec tzdata make curl build-base linux-headers bash
 
-RUN /bin/sh -c curl -fL -Lo /tmp/${REDIS_VERSION}.tar.gz ${REDIS_DOWNLOAD_URL}/${REDIS_VERSION}.tar.gz && cd /tmp && tar xvzf ${REDIS_VERSION}.tar.gz && cd redis-${REDIS_VERSION} && make && make install && mkdir -p /etc/redis && cp -f *.conf /etc/redis && rm -rf /tmp/redis-${REDIS_VERSION}* && apk del curl make
+RUN curl -fL -Lo /tmp/${REDIS_VERSION}.tar.gz ${REDIS_DOWNLOAD_URL}/${REDIS_VERSION}.tar.gz  \
+    && cd /tmp && tar xvzf ${REDIS_VERSION}.tar.gz  \
+    && cd redis-${REDIS_VERSION}  \
+    && make  \
+    && make install  \
+    && mkdir -p /etc/redis  \
+    && cp -f *.conf /etc/redis  \
+    && rm -rf /tmp/redis-${REDIS_VERSION}*  \
+    && apk del curl make
 
 COPY redis.conf /etc/redis/redis.conf
 
