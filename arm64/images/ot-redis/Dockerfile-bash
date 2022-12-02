@@ -9,6 +9,8 @@ FROM --platform=$TARGETPLATFORM docker.m.daocloud.io/redis:6.2.5-alpine
 
 RUN apk add --no-cache su-exec tzdata make curl build-base linux-headers bash
 
+RUN mkdir -p /etc/redis
+
 COPY redis.conf /etc/redis/redis.conf
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
