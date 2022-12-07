@@ -7,7 +7,7 @@ env:
   ONLINE_REGISTER: ghcr.io/ksmartdata
   BUILD_PLATFORM: linux/amd64,linux/arm64
 jobs:
-  ot-redis:
+  rabbitmq-cluster-operator:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
@@ -27,14 +27,14 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
-          context: ./arm64/images/ot-redis
-          file: ./arm64/images/ot-redis/Dockerfile-release
+          context: ./arm64/images/rabbitmq-cluster-operator
+          file: ./arm64/images/rabbitmq-cluster-operator/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/ot-redis:v6.2.5-alpine
-            ${{ env.ONLINE_REGISTER }}/ot-redis:latest
+            ${{ env.ONLINE_REGISTER }}/rabbitmq-cluster-operator:v1.14.0
+            ${{ env.ONLINE_REGISTER }}/rabbitmq-cluster-operator:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 #  ot-redis-operator:
