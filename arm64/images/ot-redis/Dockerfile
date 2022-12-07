@@ -30,6 +30,10 @@ COPY healthcheck.sh /usr/bin/healthcheck.sh
 
 RUN mkdir -p /opt/redis/ && chmod -R g+rwX /etc/redis /opt/redis
 
+RUN chmod +x /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/setupMasterSlave.sh
+RUN chmod +x /usr/bin/healthcheck.sh
+
 VOLUME ["/data"]
 
 WORKDIR /data
