@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./arm64/images/zoo-entrance
-          file: ./arm64/images/zoo-entrance/Dockerfile-bash
+          file: ./arm64/images/zoo-entrance/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
