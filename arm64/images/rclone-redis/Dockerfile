@@ -8,7 +8,7 @@ RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d
     && yum makecache
 
 RUN yum update -y
-RUN yum install -y unzip wget curl
+RUN yum install -y unzip wget curl make build-base linux-headers bash
 
 RUN curl https://rclone.org/install.sh | bash
 
