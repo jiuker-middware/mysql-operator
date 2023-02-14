@@ -117,7 +117,7 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
-          context: ./
+          context: ./arm64/images/rclone-redis
           file: ./arm64/images/rclone-redis/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
