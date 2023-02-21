@@ -57,17 +57,31 @@ RUN chmod +x /usr/local/bin/rclone
 
 # percona-xtrabackup
 WORKDIR /build
-RUN wget -O percona-xtrabackup-8.0.29-22.zip https://github.com/percona/percona-xtrabackup/archive/refs/tags/percona-xtrabackup-8.0.29-22.zip
-RUN unzip percona-xtrabackup-8.0.29-22
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.29-22
+RUN wget -O percona-xtrabackup-8.0.31-24.zip https://github.com/percona/percona-xtrabackup/archive/refs/tags/percona-xtrabackup-8.0.31-24.zip
+RUN unzip percona-xtrabackup-8.0.31-24
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.31-24
 
 RUN yum -y install cmake openssl-devel libaio libaio-devel automake autoconf \
 bison libtool ncurses-devel libgcrypt-devel libev-devel libcurl-devel zlib-devel \
 vim-common
 
+ARG TARGETARCH
 
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.29-22/build
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.29-22
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+      wget https://koji.mbox.centos.org/pkgs/packages/procps-ng/3.3.15/8.el8/x86_64/procps-ng-devel-3.3.15-8.el8.x86_64.rpm; \
+      yum -y install ./procps-ng-devel-3.3.15-8.el8.x86_64.rpm; \
+    else \
+      wget https://koji.mbox.centos.org/pkgs/packages/procps-ng/3.3.15/8.el8/aarch64/procps-ng-devel-3.3.15-8.el8.aarch64.rpm; \
+      yum -y install ./procps-ng-devel-3.3.15-8.el8.aarch64.rpm; \
+    fi
+
+#
+#RUN wget https://jenkins.percona.com/downloads/rpm/procps-ng-devel-3.3.15-6.el8.x86_64.rpm && \
+#    yum -y install ./procps-ng-devel-3.3.15-6.el8.x86_64.rpm
+
+
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.31-24/build
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.31-24
 
 RUN yum install -y gcc-toolset-11-gcc gcc-toolset-11-gcc-c++ gcc-toolset-11-binutils
 
