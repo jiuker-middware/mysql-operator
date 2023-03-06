@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 echo "Create Google Drive service-account.json file."
 echo "${GDRIVE_SERVICE_ACCOUNT}" > /tmp/gdrive-service-account.json
@@ -55,18 +54,15 @@ else
     touch /tmp/google-credentials.json
 fi
 
-REDIS_CLI_BIN=redis-cli
-VERBOSE="--debug"
-
 # exec command
 case "$1" in
     backup)
-        shift 1
-        exec $REDIS_CLI_BIN $VERBOSE clone-and-init "$@"
+        # backup
+        exec redis-cli -h ${READIS_HOST} -p 6379 -a ${REDIS_PASSWORD} --rdb /dump.rdb && rclone --config=/tmp/rclone.conf copy /dump.rdb s3:${STORE_PATH}
         ;;
     recover)
-        shift 1
-        exec $REDIS_CLI_BIN $VERBOSE run "$@"
+        # recover
+        exec rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} ${REDIS_DATA_DIR}
         ;;
     *)
         echo "Usage: $0 {backup|recover}"
