@@ -30,3 +30,5 @@ RUN curl -fL -Lo /tmp/${REDIS_VERSION}.tar.gz ${REDIS_DOWNLOAD_URL}/${REDIS_VERS
     && mkdir -p /etc/redis  \
     && cp -f *.conf /etc/redis  \
     && rm -rf /tmp/redis-${REDIS_VERSION}*  \
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
