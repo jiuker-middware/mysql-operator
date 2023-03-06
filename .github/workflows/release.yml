@@ -123,6 +123,6 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/rclone-redis:v0.0.2
+            ${{ env.ONLINE_REGISTER }}/rclone-redis:v0.0.3
           cache-from: type=gha
           cache-to: type=gha,mode=max
