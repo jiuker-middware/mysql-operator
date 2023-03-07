@@ -65,8 +65,13 @@ case "$1" in
         ;;
     recover)
         # recover
-        echo "copy from s3:${STORE_PATH} to ${REDIS_DATA_DIR}"
-        exec rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} ${REDIS_DATA_DIR}
+        if [ "`ls -A ${REDIS_DATA_DIR}`" = "" ]; then
+          echo "${REDIS_DATA_DIR} is indeed empty"
+          echo "copy from s3:${STORE_PATH} to ${REDIS_DATA_DIR}"
+          exec rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} ${REDIS_DATA_DIR}
+        else
+          echo "${REDIS_DATA_DIR} is not empty!Will not copy!"
+        fi
         ;;
     *)
         echo "Usage: $0 {backup|recover}"
