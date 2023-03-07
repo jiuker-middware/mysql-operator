@@ -58,10 +58,14 @@ fi
 case "$1" in
     backup)
         # backup
-        exec redis-cli -h ${READIS_HOST} -p 6379 -a ${REDIS_PASSWORD} --rdb /dump.rdb && rclone --config=/tmp/rclone.conf copy /dump.rdb s3:${STORE_PATH}
+        echo "backup from redis [${READIS_HOST}]"
+        redis-cli -h ${READIS_HOST} -p 6379 -a ${REDIS_PASSWORD} --rdb /dump.rdb
+        echo "copy to s3:${STORE_PATH}"
+        exec rclone --config=/tmp/rclone.conf copy /dump.rdb s3:${STORE_PATH}
         ;;
     recover)
         # recover
+        echo "copy from s3:${STORE_PATH} to ${REDIS_DATA_DIR}"
         exec rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} ${REDIS_DATA_DIR}
         ;;
     *)
