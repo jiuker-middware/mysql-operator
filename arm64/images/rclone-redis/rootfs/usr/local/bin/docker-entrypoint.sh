@@ -59,9 +59,9 @@ case "$1" in
     backup)
         # backup
         echo "backup from redis [${READIS_HOST}]"
-        redis-cli -h ${READIS_HOST} -p 6379 -a ${REDIS_PASSWORD} --rdb /dump.rdb
+        redis-cli -h ${READIS_HOST} -p 6379 -a ${REDIS_PASSWORD} --rdb ${RDB_NAME}
         echo "copy to s3:${STORE_PATH}"
-        exec rclone --config=/tmp/rclone.conf copy /dump.rdb s3:${STORE_PATH}
+        exec rclone --config=/tmp/rclone.conf copy ${RDB_NAME} s3:${STORE_PATH}
         ;;
     recover)
         # recover
