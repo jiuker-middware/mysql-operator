@@ -19,7 +19,7 @@ WORKDIR /build
 #Use path
 RUN wget -O arm64.zip https://github.com/jiuker/redis-operator-1/archive/refs/heads/patch-3.zip
 RUN unzip arm64.zip
-WORKDIR /build/redis-operator-patch-3
+WORKDIR /build/redis-operator-1-patch-3
 
 RUN go mod tidy
 # Build
