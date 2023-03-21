@@ -13,9 +13,14 @@ ENV GOPATH=/build
 #RUN unzip master.zip
 #WORKDIR /build/mysql-operator-master
 WORKDIR /build
-RUN wget -O arm64.zip https://github.com/OT-CONTAINER-KIT/redis-operator/archive/refs/heads/master.zip
+#RUN wget -O arm64.zip https://github.com/OT-CONTAINER-KIT/redis-operator/archive/refs/heads/master.zip
+#RUN unzip arm64.zip
+#WORKDIR /build/redis-operator-master
+#Use path
+RUN wget -O arm64.zip https://github.com/jiuker/redis-operator-1/archive/refs/heads/patch-3.zip
 RUN unzip arm64.zip
-WORKDIR /build/redis-operator-master
+WORKDIR /build/redis-operator-patch-3
+
 RUN go mod tidy
 # Build
 RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on go build -a -o manager main.go

@@ -67,37 +67,7 @@ jobs:
 #            ${{ env.ONLINE_REGISTER }}/ot-redis:latest
 #          cache-from: type=gha
 #          cache-to: type=gha,mode=max
-#  ot-redis-operator:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Git clone mysql-operator repo
-#        uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Login to GitHub Container Registry
-#        uses: docker/login-action@v2
-#        with:
-#          registry: ghcr.io
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v2.0.0
-#      - name: mysql-operator
-#        uses: docker/build-push-action@v3.1.1
-#        with:
-#          context: ./
-#          file: ./arm64/images/ot-redis-operator/Dockerfile
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          push: true
-#          platforms: ${{ env.BUILD_PLATFORM }}
-#          tags: |
-#             ${{ env.ONLINE_REGISTER }}/ot-redis-operator:v0.14.0
-#             ${{ env.ONLINE_REGISTER }}/ot-redis-operator:latest
-#          cache-from: type=gha
-#          cache-to: type=gha,mode=max
-  rclone-redis:
+  ot-redis-operator:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
@@ -117,12 +87,42 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
-          context: ./arm64/images/rclone-redis
-          file: ./arm64/images/rclone-redis/Dockerfile-replace-dockefile
+          context: ./
+          file: ./arm64/images/ot-redis-operator/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/rclone-redis:v0.1.6
+             ${{ env.ONLINE_REGISTER }}/ot-redis-operator:v0.14.1
+             ${{ env.ONLINE_REGISTER }}/ot-redis-operator:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+#  rclone-redis:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Git clone mysql-operator repo
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Login to GitHub Container Registry
+#        uses: docker/login-action@v2
+#        with:
+#          registry: ghcr.io
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2.0.0
+#      - name: mysql-operator
+#        uses: docker/build-push-action@v3.1.1
+#        with:
+#          context: ./arm64/images/rclone-redis
+#          file: ./arm64/images/rclone-redis/Dockerfile-replace-dockefile
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          push: true
+#          platforms: ${{ env.BUILD_PLATFORM }}
+#          tags: |
+#            ${{ env.ONLINE_REGISTER }}/rclone-redis:v0.1.6
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
