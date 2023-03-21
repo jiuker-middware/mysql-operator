@@ -29,7 +29,7 @@ RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on go build -a -o manager main.go
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM --platform=$TARGETPLATFORM ubuntu:20.04
 WORKDIR /
-COPY --from=builder /build/redis-operator-master/manager .
+COPY --from=builder /build/redis-operator-1-patch-3/manager .
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]
