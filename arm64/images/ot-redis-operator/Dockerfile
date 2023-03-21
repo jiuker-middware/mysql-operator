@@ -21,7 +21,7 @@ RUN wget -O arm64.zip https://github.com/jiuker/redis-operator-1/archive/refs/he
 RUN unzip arm64.zip
 WORKDIR /build/redis-operator-1-patch-3
 
-RUN go mod tidy
+RUN go mod tidy -compat=1.17
 # Build
 RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on go build -a -o manager main.go
 
