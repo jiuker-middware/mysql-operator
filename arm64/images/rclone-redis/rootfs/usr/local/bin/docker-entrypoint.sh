@@ -58,6 +58,7 @@ fi
 case "$1" in
     delete)
         # delete
+        echo "delete s3:${STORE_PATH}"
         exec rclone --config=/tmp/rclone.conf deletefile s3:${STORE_PATH}
         ;;
     backup)
