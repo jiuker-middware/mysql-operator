@@ -56,6 +56,10 @@ fi
 
 # exec command
 case "$1" in
+    delete)
+        # delete
+        exec rclone --config=/tmp/rclone.conf deletefile s3:${STORE_PATH}
+        ;;
     backup)
         # backup
         echo "backup from redis [${READIS_HOST}]"
@@ -74,7 +78,7 @@ case "$1" in
         fi
         ;;
     *)
-        echo "Usage: $0 {backup|recover}"
+        echo "Usage: $0 {backup|recover|delete}"
         echo "Now runs your command."
         echo "$@"
 
