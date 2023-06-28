@@ -8,16 +8,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+### Changed
+### Removed
+### Fixed
+
+## [0.6.3] - 2023-05-22
+
+### Added
 
 * `MysqlDatabase` `MysqlUser` Add delete policy
 * Add `PtHeartbeatResources` in `.Spec.PodSpec` to allow the user specifying resources for pt-heartbeat.
 * Set `MysqlCluter.Spec.BackupSchedule` to empty string to disable recurrent backups
+* Add support for backing up to HDFS
 
 ### Changed
 
 * Set default MySQL server version to `5.7.35`
 * Bump Orchestrator to `3.2.6`
 * Change policy/v1beta1 to policy/v1
+* Add RBAC permissions when deploying on OpenShift
 
 ### Removed
 
@@ -25,10 +34,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
-* `orchestrator.secretName` is ignored in helm charts
+* Bump `golang.org/x/net` to 0.8 (fix: CVE-2022-41723, CVE-2022-27664, CVE-2021-33194)
+* Orchestrator can't properly update or migrate when it more than one
 * Operator service account have no access to update mysqlbackups/status
 * Recurrent backup remote delete policy can not update according to the `cluster.Spec.BackupRemoteDeletePolicy`
-* When the operator is restarted, it will process the Pod list once to prevent the state of the pod from being changed automatically because it is not updated (especially if the pvc is full).
+* When the operator is restarted, it will process the Pod list once to prevent the state of the pod from being changed automatically because it is not updated (especially if the PVC is full).
+
+## [0.6.2] - 2021-12-28
+
+### Fixed
+ * `orchestrator.secretName` is ignored in helm charts
+
 
 ## [0.6.1] - 2021-12-22
 
