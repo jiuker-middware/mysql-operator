@@ -383,7 +383,13 @@ func (ou *orcUpdater) restartPod(nameSpace, podName string) error {
 				readyNum++
 			}
 		}
-		if readyNum == 3 {
+		if pod.Labels["role"] == "replica" {
+			readyNum++
+		}
+		if pod.Labels["healthy"] == "no" {
+			readyNum++
+		}
+		if readyNum == 5 {
 			return ou.client.Delete(context.Background(), pod)
 		}
 	}
