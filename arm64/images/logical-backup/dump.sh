@@ -10,6 +10,7 @@ ALL_DB_SIZE_QUERY="select sum(pg_database_size(datname)::numeric) from pg_databa
 PG_BIN=$PG_DIR/$PG_VERSION/bin
 DUMP_SIZE_COEFF=5
 ERRORCOUNT=0
+FILE_NAME=${LOGICAL_BACKUP_FILE_NAME:-}
 
 TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 KUBERNETES_SERVICE_PORT=${KUBERNETES_SERVICE_PORT:-443}
@@ -108,8 +109,8 @@ function aws_upload {
     # to keep logical backups at the same path as WAL
     # NB: $LOGICAL_BACKUP_S3_BUCKET_SCOPE_SUFFIX already contains the leading "/" when set by the Postgres Operator
     PATH_TO_BACKUP=s3://$LOGICAL_BACKUP_S3_BUCKET"/spilo/"$SCOPE$LOGICAL_BACKUP_S3_BUCKET_SCOPE_SUFFIX"/logical_backups/"$(date +%s).sql.gz
-    if [[ ! -z "$LOGICAL_BACKUP_FILE_NAME" ]] ; then
-        PATH_TO_BACKUP=s3://$LOGICAL_BACKUP_S3_BUCKET"/spilo/"$SCOPE$LOGICAL_BACKUP_S3_BUCKET_SCOPE_SUFFIX"/logical_backups/"$LOGICAL_BACKUP_FILE_NAME.sql.gz
+    if [[ ! -z "$FILE_NAME" ]] ; then
+        PATH_TO_BACKUP=s3://$LOGICAL_BACKUP_S3_BUCKET"/spilo/"$SCOPE$LOGICAL_BACKUP_S3_BUCKET_SCOPE_SUFFIX"/logical_backups/"$FILE_NAME.sql.gz
     fi
 
     args=()
