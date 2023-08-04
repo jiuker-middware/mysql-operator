@@ -184,7 +184,36 @@ jobs:
 #            ${{ env.ONLINE_REGISTER }}/logical-backup:${{ github.ref_name }}
 #          cache-from: type=gha
 #          cache-to: type=gha,mode=max
-  spilo:
+#  spilo:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Git clone repo
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Login to GitHub Container Registry
+#        uses: docker/login-action@v2
+#        with:
+#          registry: ghcr.io
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2.0.0
+#      - name: spilo
+#        uses: docker/build-push-action@v3.1.1
+#        with:
+#          context: ./arm64/images/spilo
+#          file: ./arm64/images/spilo/Dockerfile
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          push: true
+#          platforms: ${{ env.BUILD_PLATFORM }}
+#          tags: |
+#            ${{ env.ONLINE_REGISTER }}/spilo-15:${{ github.ref_name }}
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+  redis-shake:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone repo
@@ -204,12 +233,12 @@ jobs:
       - name: spilo
         uses: docker/build-push-action@v3.1.1
         with:
-          context: ./arm64/images/spilo
-          file: ./arm64/images/spilo/Dockerfile
+          context: ./arm64/images/redis-shake
+          file: ./arm64/images/redis-shake/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/spilo-15:${{ github.ref_name }}
+            ${{ env.ONLINE_REGISTER }}/redis-shake:v1.0.0
           cache-from: type=gha
           cache-to: type=gha,mode=max
