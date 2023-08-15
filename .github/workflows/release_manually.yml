@@ -1,0 +1,248 @@
+name: Release Manually
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'which docker build to run'
+        required: true
+        default: 'rocketmq-exporter'
+        type: choice
+        options:
+          - 'rocketmq-exporter'
+          - 'rocketmq-operator'
+          - 'rocketmq-nameserver'
+          - 'rocketmq-broker'
+          - 'rocketmq-dashboard'
+      tag:
+        description: 'tag'
+        required: true
+        default: 'v0.0.1'
+        type: string
+env:
+  ONLINE_REGISTER: ghcr.io/ksmartdata
+  BUILD_PLATFORM: linux/amd64,linux/arm64
+  # 与 mcamel 中使用的版本保持一致
+  ROCKETMQ_VERSION: 4.5.0
+
+jobs:
+  rocketmq-exporter:
+    if: ${{ inputs.job == 'rocketmq-exporter' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Clone RocketMQ Exporter
+#        uses: actions/checkout@v2
+#        with:
+#          repository: apache/rocketmq-exporter
+#          ref: master
+
+#      - name: Set Up Java
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: 8
+#          distribution: 'temurin'
+
+#      - name: Customize Build Files
+#        run: |
+#          sed -i 's/FROM java:8/FROM --platform=$TARGETPLATFORM openjdk:8-jre-alpine/g' src/main/docker/Dockerfile
+#
+#      - name: Build RocketMQ Exporter Image
+#        run: |
+#          mvn package -Dmaven.test.skip=true docker:build
+#
+#          docker tag rocketmq-exporter:latest ${{ env.ONLINE_REGISTER }}/rocketmq-exporter:v1.0.0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./arm64/images/
+          file: ./arm64/images/rocketmq-exporter/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  rocketmq-operator:
+    if: ${{ inputs.job == 'rocketmq-operator' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 使用官方的仓库，需要执行 make generate，但是下载 controller-gen 时不符合预期，所以临时使用 drivebyer/rocketmq-operator 仓库
+      # 待 https://github.com/apache/rocketmq-operator/pull/169 合并和，可以切换回官方仓库
+      - name: Clone RocketMQ Operator
+        uses: actions/checkout@v2
+        with:
+          repository: drivebyer/rocketmq-operator
+          ref: for-mcamel-import
+
+      - name: Generate missing files
+        run: |
+          go mod tidy
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          build-args: |
+            TARGETOS=linux
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  rocketmq-nameserver:
+    if: ${{ inputs.job == 'rocketmq-nameserver' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clone RocketMQ Operator
+        uses: actions/checkout@v2
+        with:
+          repository: apache/rocketmq-operator
+          ref: master
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./images/namesrv/alpine
+          file: ./images/namesrv/alpine/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          build-args: |
+            version=${{ env.ROCKETMQ_VERSION }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  rocketmq-broker:
+    if: ${{ inputs.job == 'rocketmq-broker' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clone RocketMQ Operator
+        uses: actions/checkout@v2
+        with:
+          repository: apache/rocketmq-operator
+          ref: master
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./images/broker/alpine
+          file: ./images/broker/alpine/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          build-args: |
+            version=${{ env.ROCKETMQ_VERSION }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  rocketmq-dashboard:
+    if: ${{ inputs.job == 'rocketmq-dashboard' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clone RocketMQ Docker
+        uses: actions/checkout@v2
+        with:
+          repository: apache/rocketmq-docker
+          ref: master
+
+      - name: Customize RocketMQ Dashboard
+        run: |
+          # replace FROM centos:7 with FROM --platform=$TARGETPLATFORM centos:7 by sed
+          sed -i 's/FROM centos:7/FROM --platform=$TARGETPLATFORM centos:7/g' image-build/Dockerfile-centos-dashboard
+          
+          # replace 3.6.3 to 3.9.4
+          sed -i 's/3.6.3/3.9.4/g' image-build/Dockerfile-centos-dashboard
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./image-build
+          file: ./image-build/Dockerfile-centos-dashboard
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          build-args: |
+            version=${{ env.ROCKETMQ_VERSION }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
