@@ -16,6 +16,7 @@ on:
           - 'community-server'
           - 'community-router'
           - 'community-operator'
+          - 'pgbouncer'
       tag:
         description: 'tag'
         required: true
@@ -350,3 +351,20 @@ jobs:
           inputs: ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}-2.0.11
           images: ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-amd64,${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-arm64
           push: true
+
+  pgbouncer:
+    if: ${{ inputs.job == 'pgbouncer' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare images
+        run: |
+          docker pull registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }}
+          docker tag registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }} ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
+          docker push ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
