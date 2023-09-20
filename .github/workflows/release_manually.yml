@@ -356,6 +356,10 @@ jobs:
     if: ${{ inputs.job == 'pgbouncer' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Git clone repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -363,8 +367,29 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare images
-        run: |
-          docker pull registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }}
-          docker tag registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }} ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
-          docker push ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./arm64/images/
+          file: ./arm64/images/pgbouncer/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          #platforms: ${{ env.BUILD_PLATFORM }} 目前只有 amd，先注释掉
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
+          build-args: |
+            PGBOUNCER_VERSION=${{ inputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+#      - name: Prepare images
+#        run: |
+#          docker pull registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }}
+#          docker tag registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }} ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
+#          docker push ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
