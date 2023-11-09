@@ -167,7 +167,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   rocketmq-controller:
-    if: ${{ inputs.job == 'rocketmq-nameserver' }}
+    if: ${{ inputs.job == 'rocketmq-controller' }}
     runs-on: ubuntu-latest
     steps:
       - name: Login to GitHub Container Registry
