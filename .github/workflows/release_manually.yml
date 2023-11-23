@@ -173,11 +173,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Clone RocketMQ Operator
-        uses: actions/checkout@v2
+#      - name: Clone RocketMQ Operator
+#        uses: actions/checkout@v2
+#        with:
+#          repository: apache/rocketmq-operator
+#          ref: master
+
+      # 先暂时用自定义的镜像，待合并上游后，切换 todo(@drivebyer)
+      - name: Git clone mysql-operator repo
+        uses: actions/checkout@v3
         with:
-          repository: apache/rocketmq-operator
-          ref: master
+          fetch-depth: 0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -188,8 +194,8 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
-          context: ./images/namesrv/alpine
-          file: ./images/namesrv/alpine/Dockerfile
+          context: ./arm64/images/rocketmq-nameserver/alpine
+          file: ./arm64/images/rocketmq-nameserver/alpine/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
