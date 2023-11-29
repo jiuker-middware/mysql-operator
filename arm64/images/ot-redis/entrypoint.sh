@@ -34,6 +34,9 @@ redis_mode_setup() {
     if [[ "${SETUP_MODE}" == "cluster" ]]; then
         {
             echo cluster-enabled yes
+            echo "cluster-announce-ip ${POD_IP}"
+            echo cluster-announce-port 6379
+            echo cluster-announce-bus-port 6380
             echo cluster-node-timeout 5000
             echo cluster-require-full-coverage no
             echo cluster-migration-barrier 1
@@ -66,6 +69,7 @@ persistence_setup() {
 }
 
 external_config() {
+
     echo "include ${EXTERNAL_CONFIG_FILE}" >> /etc/redis/redis.conf
 }
 
