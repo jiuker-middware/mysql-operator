@@ -34,7 +34,7 @@ redis_mode_setup() {
     if [[ "${SETUP_MODE}" == "cluster" ]]; then
         {
             echo cluster-enabled yes
-            echo "cluster-announce-ip ${POD_IP}"
+            echo cluster-announce-ip ${POD_IP}
             echo cluster-announce-port 6379
             echo cluster-announce-bus-port 6380
             echo cluster-node-timeout 5000
