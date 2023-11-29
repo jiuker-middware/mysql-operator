@@ -17,9 +17,9 @@ WORKDIR /build
 #RUN unzip arm64.zip
 #WORKDIR /build/redis-operator-master
 #Use path
-RUN wget -O arm64.zip https://github.com/jiuker/redis-operator-1/archive/refs/heads/patch-3.zip
+RUN wget -O arm64.zip https://github.com/ksmartdata/redis-operator/archive/refs/heads/support_node_port.zip
 RUN unzip arm64.zip
-WORKDIR /build/redis-operator-1-patch-3
+WORKDIR /build/redis-operator-support_node_port
 
 RUN go mod tidy -compat=1.17
 # Build
