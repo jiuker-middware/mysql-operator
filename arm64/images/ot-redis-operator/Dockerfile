@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
+FROM --platform=$TARGETPLATFORM golang:1.21.0 as builder
 
 USER root
 
