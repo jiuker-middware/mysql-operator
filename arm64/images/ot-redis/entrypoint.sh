@@ -37,7 +37,6 @@ redis_mode_setup() {
         fi
         {
             echo cluster-enabled yes
-            echo cluster-announce-ip ${POD_IP}
             echo cluster-announce-port 6379
             echo cluster-announce-bus-port 6380
             echo cluster-node-timeout 5000
@@ -45,7 +44,7 @@ redis_mode_setup() {
             echo cluster-migration-barrier 1
             echo cluster-config-file "${DATA_DIR}/nodes.conf"
         } >> /etc/redis/redis.conf
-
+#            echo cluster-announce-ip ${POD_IP}
         sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" "${DATA_DIR}/nodes.conf"
     else
         echo "Setting up redis in standalone mode"
