@@ -494,8 +494,6 @@ jobs:
           tags: |
              ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
              ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
 #      - name: Prepare images
 #        run: |
