@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/ksmartdata/ot-redis:v6.2.5
+FROM --platform=$TARGETPLATFORM ghcr.io/ksmartdata/ot-redis:v6.2.5-alpine
 
 COPY redis.conf /etc/redis/redis.conf
 
