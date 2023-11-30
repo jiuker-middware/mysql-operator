@@ -517,7 +517,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./arm64/images/ot-redis
-          file: ./arm64/images/ot-redis/Dockerfile-release-5
+          file: ./arm64/images/ot-redis/Dockerfile-release
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
