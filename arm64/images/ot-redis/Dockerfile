@@ -2,7 +2,7 @@ FROM --platform=$TARGETPLATFORM alpine:3.9.6
 
 ARG REDIS_DOWNLOAD_URL=https://github.com/redis/redis/archive/refs/tags/
 
-ARG REDIS_VERSION=6.2.5
+ARG REDIS_VERSION=7.0.6
 
 #https://github.com/redis/redis/archive/refs/tags/6.2.5.tar.gz
 
