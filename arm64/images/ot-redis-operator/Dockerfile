@@ -17,9 +17,9 @@ WORKDIR /build
 #RUN unzip arm64.zip
 #WORKDIR /build/redis-operator-master
 #Use path
-RUN wget -O arm64.zip https://github.com/ksmartdata/redis-operator/archive/refs/heads/support_node_port.zip
+RUN wget -O arm64.zip https://github.com/ksmartdata/redis-operator/archive/refs/heads/ot-operator-1-14-1.zip
 RUN unzip arm64.zip
-WORKDIR /build/redis-operator-support_node_port
+WORKDIR /build/redis-operator-ot-operator-1-14-1
 
 RUN go mod tidy -compat=1.17
 # Build
@@ -29,7 +29,7 @@ RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on go build -a -o manager main.go
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM --platform=$TARGETPLATFORM ubuntu:20.04
 WORKDIR /
-COPY --from=builder /build/redis-operator-support_node_port/manager .
+COPY --from=builder /build/redis-operator-ot-operator-1-14-1/manager .
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]
