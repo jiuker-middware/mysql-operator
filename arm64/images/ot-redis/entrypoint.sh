@@ -45,7 +45,7 @@ redis_mode_setup() {
         fi
         local nodePortConf=$(grep "$(hostname)" "${EXTERNAL_CONFIG_FILE}")
         if [[ -z "${nodePortConf}" ]]; then
-            echo "No nodeport config found for ${hostname}"
+            echo "No nodeport config found for $(hostname)"
             sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" "${DATA_DIR}/nodes.conf"
         fi
     else
@@ -79,13 +79,13 @@ external_config() {
     # 3. cluster-announce-bus-port
     local nodePortConf=$(grep "$(hostname)" "${EXTERNAL_CONFIG_FILE}")
     if [[ -z "${nodePortConf}" ]]; then
-        echo "No nodeport config found for ${hostname}"
+        echo "No nodeport config found for $(hostname)"
         echo "include ${EXTERNAL_CONFIG_FILE}" >> /etc/redis/redis.conf
     else
-        echo "Found nodeport config for ${hostname}"
-        local ip=$(echo "${line}" | awk '{print $2}')
-        local port=$(echo "${line}" | awk '{print $3}')
-        local bus_port=$(echo "${line}" | awk '{print $4}')
+        echo "Found nodeport config for $(hostname)"
+        local ip=$(echo "${nodePortConf}" | awk '{print $2}')
+        local port=$(echo "${nodePortConf}" | awk '{print $3}')
+        local bus_port=$(echo "${nodePortConf}" | awk '{print $4}')
         echo "cluster-announce-ip ${ip}" >> /etc/redis/redis.conf
         echo "cluster-announce-port ${port}" >> /etc/redis/redis.conf
         echo "cluster-announce-bus-port ${bus_port}" >> /etc/redis/redis.conf
