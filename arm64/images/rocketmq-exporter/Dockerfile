@@ -3,8 +3,8 @@ FROM --platform=$TARGETPLATFORM maven:3.6.3-jdk-8-openj9 AS builder
 RUN apt-get update && apt-get install -y git && \
     git clone https://github.com/apache/rocketmq-exporter.git
 
-# 将 rocketmq-exporter/src/main/java/org/apache/rocketmq/exporter/model/BrokerRuntimeStats.java 文件中的 getTransferredTps 替换为 getTransferedTps，否则 exporter 采集会空指针
-RUN sed -i 's/getTransferredTps/getTransferedTps/g' rocketmq-exporter/src/main/java/org/apache/rocketmq/exporter/model/BrokerRuntimeStats.java
+# 去掉 rocketmq-exporter/src/main/java/org/apache/rocketmq/exporter/model/BrokerRuntimeStats.java 文件中包含 getTransferredTps 的一行 否则 exporter 采集会空指针，不用维护两个 exporter 镜像。
+RUN sed -i '/getTransferredTps/d' rocketmq-exporter/src/main/java/org/apache/rocketmq/exporter/model/BrokerRuntimeStats.java
 
 RUN cd rocketmq-exporter && \
     mvn clean package -Dmaven.test.skip=truedocker
