@@ -55,18 +55,18 @@ case "$1" in
     backup)
         # backup
         echo "Backup from mongo [${MONGO_HOST}]"
-        mongodump -h ${MONGO_HOST} -u ${MONGO_USERNAME} -p ${MONGO_PASSWORD} --archive=/tmp/mongo.dump --gzip
+        mongodump -h ${MONGO_HOST} -u ${MONGO_USERNAME} -p ${MONGO_PASSWORD} --archive=/tmp/${BACKUP_FILE_NAME} --gzip
         echo "Copy to s3:${STORE_PATH}"
-        exec rclone --config=/tmp/rclone.conf copy /tmp/mongo.dump s3:${STORE_PATH}
+        exec rclone --config=/tmp/rclone.conf copy /tmp/${BACKUP_FILE_NAME} s3:${STORE_PATH}
         ;;
     recover)
         # recover
         echo "Copy from s3:${STORE_PATH} to /tmp"
         # get final element of path
         final_store_path=$(echo ${STORE_PATH} | awk -F'/' '{print $NF}')
-        rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} /tmp/${final_store_path}
+        rclone --config=/tmp/rclone.conf copy s3:${STORE_PATH} /tmp
         echo "Restore to MongoDB [${MONGO_HOST}]"
-        mongorestore -h ${MONGO_HOST} -u ${MONGO_USERNAME} -p ${MONGO_PASSWORD} --authenticationDatabase admin --archive=/tmp/${final_store_path}/mongo.dump --gzip
+        mongorestore -h ${MONGO_HOST} -u ${MONGO_USERNAME} -p ${MONGO_PASSWORD} --authenticationDatabase admin --archive=/tmp/${final_store_path} --gzip
         ;;
     *)
         echo "Usage: $0 {backup|recover|delete}"
