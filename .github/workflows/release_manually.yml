@@ -416,19 +416,19 @@ jobs:
 
       - name: Prepare images sidecar(used for initconf, sidecar, batchjob/backup)
         run: |
-          docker pull container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.0.11
-          docker pull container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.0.11-aarch64
-          docker tag container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.0.11 ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-amd64
-          docker tag container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.0.11-aarch64 ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-arm64
+          docker pull container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.1.1
+          docker pull container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.1.1-aarch64
+          docker tag container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.1.1 ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-amd64
+          docker tag container-registry.oracle.com/mysql/community-operator:${{ inputs.tag }}-2.1.1-aarch64 ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-arm64
           
-          docker push ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-amd64
-          docker push ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-arm64
+          docker push ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-amd64
+          docker push ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-arm64
 
       - name: Create and push manifest images sidecar(used for initconf, sidecar, batchjob/backup)
         uses: Noelware/docker-manifest-action@master
         with:
-          inputs: ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}-2.0.11
-          images: ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-amd64,${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.0.11-arm64
+          inputs: ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}-2.1.1
+          images: ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-amd64,${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-2.1.1-arm64
           push: true
 
   pgbouncer:
