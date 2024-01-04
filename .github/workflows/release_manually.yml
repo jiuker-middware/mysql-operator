@@ -112,6 +112,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/
           file: ./arm64/images/rocketmq-exporter/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -154,6 +157,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: .
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
@@ -197,6 +203,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/rocketmq-nameserver/alpine
           file: ./arm64/images/rocketmq-nameserver/alpine/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -235,6 +244,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./images/controller/alpine
           file: ./images/controller/alpine/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -273,6 +285,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./images/broker/alpine
           file: ./images/broker/alpine/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -319,6 +334,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./image-build
           file: ./image-build/Dockerfile-centos-dashboard
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -456,6 +474,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/
           file: ./arm64/images/pgbouncer/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -488,6 +509,9 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./
           file: ./arm64/images/ot-redis-operator/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -517,6 +541,9 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/ot-redis
           file: ./arm64/images/ot-redis/Dockerfile-release
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -547,6 +574,9 @@ jobs:
       - name: mysql-operator
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/zoo-entrance
           file: ./arm64/images/zoo-entrance/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
