@@ -55,6 +55,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
           context: ./arm64/images/rclone-mongo
           file: ./arm64/images/rclone-mongo/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
