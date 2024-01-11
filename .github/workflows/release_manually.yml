@@ -22,6 +22,7 @@ on:
           - 'ot-redis-operator'
           - 'ot-redis-operator-upstream'
           - 'ot-redis'
+          - 'ot-redis-upstream'
           - 'zoo-entrance'
       upstream-ref:
         description: 'upstream ref'
@@ -38,6 +39,48 @@ env:
   BUILD_PLATFORM: linux/amd64,linux/arm64
 
 jobs:
+  ot-redis-upstream:
+    if : ${{ inputs.job == 'ot-redis-upstream' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Clone OT-CONTAINER-KIT/redis
+        uses: actions/checkout@v3
+        with:
+          repository: OT-CONTAINER-KIT/redis
+          # 默认为空，则使用默认分支
+          ref: ${{ inputs.upstream-ref }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+      - name: Build && Push
+        uses: docker/build-push-action@v3.1.1
+        with:
+          annotations: |
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
+          context: .
+          file: ./Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          build-args: |
+            REDIS_DOWNLOAD_URL=https://download.redis.io/releases
+            REDIS_VERSION=${{ inputs.tag }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/ot-redis:v${{ inputs.tag }}-alpine
+            ${{ env.ONLINE_REGISTER }}/ot-redis:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   ot-redis-operator-upstream:
     if : ${{ inputs.job == 'ot-redis-operator-upstream' }}
     runs-on: ubuntu-latest
