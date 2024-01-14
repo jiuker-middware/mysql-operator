@@ -64,9 +64,6 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
-          annotations: |
-            GITHUB_REF: ${{ github.ref }}
-            GITHUB_SHA: ${{ github.sha }}
           context: .
           file: ./Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -92,6 +89,13 @@ jobs:
           # 默认为空，则使用默认分支
           ref: ${{ inputs.upstream-ref }}
 
+      - name: Prepare env variables
+        id: env
+        run: |
+          echo "BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "GIT_SHA=$(git rev-parse --short HEAD | cut -c1-7)" >> $GITHUB_ENV
+          echo "GIT_REF=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match)" >> $GITHUB_ENV
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -106,9 +110,11 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
-          annotations: |
-            GITHUB_REF: ${{ github.ref }}
-            GITHUB_SHA: ${{ github.sha }}
+          outputs: type=image,name=target,\
+            annotation-index.org.opencontainers.image.description=Build from commit ${{ env.GIT_SHA }} and ref ${{ env.GIT_REF }},\
+            annotation-index.org.opencontainers.image.created=${{ env.BUILD_DATE }},\
+            annotation-index.org.opencontainers.image.ref.name=${{ env.GIT_REF }},\
+            annotation-index.org.opencontainers.image.revision=${{ env.GIT_SHA }}
           context: .
           file: ./Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
