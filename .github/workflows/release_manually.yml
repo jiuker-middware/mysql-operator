@@ -52,9 +52,9 @@ jobs:
 
       - name: Adapt
         run: |
-          # 删除 Dockerfile 文件中的行：REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}
+          # 删除 entrypoint.sh 文件中的行：REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}
           # 因为老版本的 OT operator 不会给 pod 传递 REDIS_MAJOR_VERSION 这个环境变量，会导致 entrypoint.sh 走到错误的逻辑流程
-          sed -i '/REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}/d' ./Dockerfile
+          sed -i '/REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}/d' ./entrypoint.sh
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -483,7 +483,7 @@ jobs:
           
           docker push ${{ env.ONLINE_REGISTER }}/community-server:${{ inputs.tag }}-amd64
           docker push ${{ env.ONLINE_REGISTER }}/community-server:${{ inputs.tag }}-arm64
-          
+
       - name: Create and push manifest images
         uses: Noelware/docker-manifest-action@master
         with:
