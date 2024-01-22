@@ -50,12 +50,27 @@ jobs:
           # 默认为空，则使用默认分支
           ref: ${{ inputs.upstream-ref }}
 
+      - name: Adapt
+        run: |
+          # 删除 Dockerfile 文件中的行：REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}
+          # 因为老版本的 OT operator 不会给 pod 传递 REDIS_MAJOR_VERSION 这个环境变量，会导致 entrypoint.sh 走到错误的逻辑流程
+          sed -i '/REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}/d' ./Dockerfile
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare env variables
+        id: env
+        run: |
+          echo "BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "GIT_SHA=$(git rev-parse --short HEAD | cut -c1-7)" >> $GITHUB_ENV
+          echo "GIT_REF=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match)" >> $GITHUB_ENV
+          echo "GIT_REPO=$(git config --get remote.origin.url)" >> $GITHUB_ENV
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -64,6 +79,9 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v3.1.1
         with:
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Build from ${{ env.GIT_REPO }}/${{ env.GIT_REF }}@${{ env.GIT_SHA }} at ${{ env.BUILD_DATE }}
+          labels:
+            org.opencontainers.image.description: Build from ${{ env.GIT_REPO }}/${{ env.GIT_REF }}@${{ env.GIT_SHA }} at ${{ env.BUILD_DATE }}
           context: .
           file: ./Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
