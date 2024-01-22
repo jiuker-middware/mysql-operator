@@ -81,7 +81,7 @@ jobs:
         with:
           outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Build from ${{ env.GIT_REPO }}/${{ env.GIT_REF }}@${{ env.GIT_SHA }} at ${{ env.BUILD_DATE }}
           labels:
-            org.opencontainers.image.description: Build from ${{ env.GIT_REPO }}/${{ env.GIT_REF }}@${{ env.GIT_SHA }} at ${{ env.BUILD_DATE }}
+            org.opencontainers.image.description=Build from ${{ env.GIT_REPO }}/${{ env.GIT_REF }}@${{ env.GIT_SHA }} at ${{ env.BUILD_DATE }}
           context: .
           file: ./Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
