@@ -55,6 +55,10 @@ jobs:
           # 删除 entrypoint.sh 文件中的行：REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}
           # 因为老版本的 OT operator 不会给 pod 传递 REDIS_MAJOR_VERSION 这个环境变量，会导致 entrypoint.sh 走到错误的逻辑流程
           sed -i '/REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}/d' ./entrypoint.sh
+          
+          # 将 entrypoint.sh 中的 NODE_CONF_DIR=${NODE_CONF_DIR:-"/node-conf"} 替换成 NODE_CONF_DIR=${NODE_CONF_DIR:-"/data"}
+          # 因为 /data 是 pvc 的默认挂载目录
+          sed -i 's/NODE_CONF_DIR=${NODE_CONF_DIR:-"\/node-conf"}/NODE_CONF_DIR=${NODE_CONF_DIR:-"\/data"}/g' ./entrypoint.sh
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
