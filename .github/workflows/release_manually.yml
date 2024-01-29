@@ -46,7 +46,7 @@ jobs:
       - name: Git Clone OT-CONTAINER-KIT/redis
         uses: actions/checkout@v3
         with:
-          repository: OT-CONTAINER-KIT/redis
+          repository: drivebyer/redis
           # 默认为空，则使用默认分支
           ref: ${{ inputs.upstream-ref }}
 
