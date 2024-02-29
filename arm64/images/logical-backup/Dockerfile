@@ -15,6 +15,9 @@ RUN apt-get update     \
         gnupg \
         gcc \
         libffi-dev \
+    && curl https://rclone.org/install.sh | bash \
+    && cp /usr/bin/rclone /usr/local/bin/ \
+    && chmod +x /usr/local/bin/rclone \
     && curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && pip3 install --upgrade pip \
     && pip3 install --no-cache-dir awscli --upgrade \
