@@ -15,6 +15,7 @@ RUN apt-get update     \
         gnupg \
         gcc \
         libffi-dev \
+        unzip \
     && curl https://rclone.org/install.sh | bash \
     && cp /usr/bin/rclone /usr/local/bin/ \
     && chmod +x /usr/local/bin/rclone \
