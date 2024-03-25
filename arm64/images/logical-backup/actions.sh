@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/bin/bash
 
 # enable unofficial bash strict mode
 set -o errexit
