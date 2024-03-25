@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM  registry.opensource.zalan.do/library/ubuntu-22.04:latest
+FROM --platform=$TARGETPLATFORM  ubuntu:22.04
 LABEL maintainer="Team ACID @ Zalando <team-acid@zalando.de>"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
