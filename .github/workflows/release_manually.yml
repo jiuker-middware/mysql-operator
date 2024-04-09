@@ -615,13 +615,7 @@ jobs:
           inputs: ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           images: ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-amd64,${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-arm64
           push: true
-
-      - name: Create and push manifest images sidecar(used for initconf, sidecar, batchjob/backup)
-        uses: Noelware/docker-manifest-action@master
-        with:
-          inputs: ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
-          images: ${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-amd64,${{ env.ONLINE_REGISTER }}/community-operator:${{ inputs.tag }}-arm64
-          push: true
+          amend: true
 
   pgbouncer:
     if: ${{ inputs.job == 'pgbouncer' }}
