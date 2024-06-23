@@ -26,6 +26,7 @@ on:
           - 'zoo-entrance'
           - 'logical-backup'
           - 'ci-builder'
+          - 'elasticsearch-with-s3-plugin'
       upstream-ref:
         description: 'upstream ref'
         required: false
@@ -783,6 +784,8 @@ jobs:
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:7.16.3
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 #          cache-from: type=gha
 #          cache-to: type=gha,mode=max
 #      - name: Prepare images
