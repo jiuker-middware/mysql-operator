@@ -191,11 +191,11 @@ var mysqlCommonConfigs = map[string]string{
 	"skip-slave-start": "on",
 
 	// Crash safe
-	"relay-log-info-repository": "TABLE",
-	"relay-log-recovery":        "on",
+	//"relay-log-info-repository": "TABLE",
+	"relay-log-recovery": "on",
 
 	// https://github.com/github/orchestrator/issues/323#issuecomment-338451838
-	"master-info-repository": "TABLE",
+	//"master-info-repository": "TABLE",
 
 	"default-storage-engine":   "InnoDB",
 	"gtid-mode":                "on",
@@ -250,11 +250,11 @@ var mysql8xConfigs = map[string]string{
 	"binlog_expire_logs_seconds": "1209600", // 14 days = 14 * 24 * 60 * 60
 
 	// use 5.7 auth plugin to be backward compatible
-	"default-authentication-plugin": "mysql_native_password",
+	//"default-authentication-plugin": "mysql_native_password",
 }
 
 var mysqlMasterSlaveBooleanConfigs = []string{
 	// Safety
 	"skip-name-resolve",
-	"skip-host-cache",
+	//"skip-host-cache",
 }
