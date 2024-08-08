@@ -27,6 +27,7 @@ on:
           - 'logical-backup'
           - 'ci-builder'
           - 'elasticsearch-with-s3-plugin'
+          - 'mysql-operator-sidecar-80'
       upstream-ref:
         description: 'upstream ref'
         required: false
@@ -42,6 +43,38 @@ env:
   BUILD_PLATFORM: linux/amd64,linux/arm64
 
 jobs:
+  mysql-operator-sidecar-80:
+    if : ${{ inputs.job == 'mysql-operator-sidecar-80' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.0.0
+      - name: mysql-operator-sidecar-80
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: ./arm64/images/mysql-operator-sidecar-8.0
+          file: ./arm64/images/mysql-operator-sidecar-8.0/Dockerfile
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+          platforms: ${{ env.BUILD_PLATFORM }}
+          tags: |
+            ${{ env.ONLINE_REGISTER }}/mysql-operator-sidecar-8.0:${{ inputs.tag }}
+            ${{ env.ONLINE_REGISTER }}/mysql-operator-sidecar-8.0:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   ci-builder:
     if : ${{ inputs.job == 'ci-builder' }}
     runs-on: ubuntu-latest
