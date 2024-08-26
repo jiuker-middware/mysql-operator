@@ -13,7 +13,6 @@ RUN microdnf install -y --disableplugin=subscription-manager  --setopt=install_w
         net-snmp-agent-libs
 RUN microdnf install -y --disableplugin=subscription-manager curl \
     hostname tar gzip procps jq \
-    && microdnf upgrade -y  \
     && rm -rf /var/lib/apt/lists/*
 
 {% endblock -%}
