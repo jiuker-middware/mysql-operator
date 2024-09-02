@@ -61,6 +61,7 @@ jobs:
           cp ./ksmartdata/images/mongodb/operator-inventory.yaml ./mongodb-kubernetes-operator/inventories/operator-inventory.yaml
           cp ./ksmartdata/images/mongodb/pipeline.py ./mongodb-kubernetes-operator/pipeline.py
           cp ./ksmartdata/images/mongodb/Dockerfile.ubi ./mongodb-kubernetes-operator/scripts/dev/templates/agent/Dockerfile.ubi
+          cp ./ksmartdata/images/mongodb/inventory.yaml ./mongodb-kubernetes-operator/inventory.yaml
 
       - name: Build and Push Image To ghcr.io
         working-directory: ./mongodb-kubernetes-operator
