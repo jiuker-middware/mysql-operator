@@ -2,8 +2,6 @@ FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
 
-
-
 RUN apt update -y
 
 RUN apt install -y wget gcc unzip

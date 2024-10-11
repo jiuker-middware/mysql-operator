@@ -2,11 +2,12 @@ FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
 
+RUN apt-get update -y && \
+    apt-get install -y wget gcc unzip && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean autoclean && \
+    apt-get autoremove --yes \
 
-
-RUN apt update -y
-
-RUN apt install -y wget gcc unzip
 ENV GOPROXY=https://goproxy.cn
 ENV GOPATH=/build
 

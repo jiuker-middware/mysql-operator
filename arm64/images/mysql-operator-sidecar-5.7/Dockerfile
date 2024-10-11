@@ -6,8 +6,6 @@ FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
 
-
-
 RUN apt update -y
 
 RUN apt install -y wget gcc unzip
@@ -26,29 +24,13 @@ FROM --platform=$TARGETPLATFORM centos:8.3.2011 as all
 
 USER root
 
-
-
 COPY rootfs/ /
-
-#RUN apt-get update -y\
-#    && apt-get install -y --no-install-recommends \
-#        apt-transport-https ca-certificates unzip pigz wget gnupg \
-#    && rm -rf /var/lib/apt/lists/*
-
 
 RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*\
     && yum makecache
 
 RUN yum update -y
 RUN yum install -y unzip wget
-
-#rclone
-#RUN export RCLONE_VERSION=1.57.0
-#RUN wget -nv https://github.com/ncw/rclone/releases/download/v1.57.0/rclone-v1.57.0-linux-${ARCH}.zip
-#RUN unzip rclone-*-linux-${ARCH}.zip
-#RUN mv rclone-*-linux-${ARCH}/rclone /usr/local/bin/
-#RUN chmod 755 /usr/local/bin/rclone
-#RUN rm -r rclone-*-linux-arm64 rclone-*-linux-${ARCH}.zip
 
 RUN curl https://rclone.org/install.sh | bash
 
@@ -65,7 +47,6 @@ WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26
 RUN yum install -y cmake openssl-devel libaio libaio-devel automake autoconf \
     bison libtool ncurses-devel libgcrypt-devel libev-devel libcurl-devel zlib-devel \
     vim-common
-
 
 WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26/build
 WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26
@@ -103,10 +84,6 @@ RUN make install
 RUN yum -y install perl-DBI
 RUN yum -y install perl-DBD-MySQL
 
-
-
-
-
 RUN usermod -u 994 systemd-coredump
 RUN groupmod -g 994 systemd-coredump
 RUN groupmod -g 993 input
@@ -115,10 +92,6 @@ RUN groupadd -g 999 mysql
 RUN useradd -u 999 -r -g 999 -s /sbin/nologin \
     -c "Default Application User" mysql
 
-#RUN usermod -u 999 mysql
-#RUN groupmod -g 999 mysql
-#RUN chown -R 999.999 /etc/mysql
-#RUN chown -R 999.999 /etc/my.cnf
 RUN chown 999.999 /usr/local/bin/docker-entrypoint.sh
 RUN chown 999.999 /usr/local/bin/mysql-operator-sidecar
 RUN chown 999.999 /usr/local/bin/rclone
@@ -130,8 +103,6 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 FROM --platform=$TARGETPLATFORM centos:8.3.2011
 
 USER root
-
-
 
 RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*\
     && yum makecache
@@ -155,11 +126,8 @@ RUN chown 999.999 /usr/local/bin/docker-entrypoint.sh
 RUN chown 999.999 /usr/local/bin/mysql-operator-sidecar
 RUN chown 999.999 /usr/local/bin/rclone
 
-
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENV PATH=$PATH:/usr/local/xtrabackup/bin/
-
-
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
