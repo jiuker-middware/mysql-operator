@@ -40,16 +40,16 @@ RUN chmod +x /usr/local/bin/rclone
 
 # percona-xtrabackup
 WORKDIR /build
-RUN wget -O percona-xtrabackup-2.4.26.zip https://github.com/percona/percona-xtrabackup/archive/refs/tags/percona-xtrabackup-2.4.26.zip
-RUN unzip percona-xtrabackup-2.4.26
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26
+RUN wget -O percona-xtrabackup-8.0.35-31.zip https://github.com/percona/percona-xtrabackup/archive/refs/tags/percona-xtrabackup-8.0.35-31.zip
+RUN unzip percona-xtrabackup-8.0.35-31
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.35-31
 
 RUN yum install -y cmake openssl-devel libaio libaio-devel automake autoconf \
     bison libtool ncurses-devel libgcrypt-devel libev-devel libcurl-devel zlib-devel \
     vim-common
 
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26/build
-WORKDIR /build/percona-xtrabackup-percona-xtrabackup-2.4.26
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.35-31/build
+WORKDIR /build/percona-xtrabackup-percona-xtrabackup-8.0.35-31
 
 RUN yum install -y gcc-toolset-11-gcc gcc-toolset-11-gcc-c++ gcc-toolset-11-binutils
 
