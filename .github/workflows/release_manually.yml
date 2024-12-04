@@ -850,19 +850,12 @@ jobs:
           annotations: |
             GITHUB_REF: ${{ github.ref }}
             GITHUB_SHA: ${{ github.sha }}
-          context: ./images/elasticsearch
-          file: ./images/elasticsearch/Dockerfile
+          context: ./images/elasticsearch/${{ inputs.tag }}
+          file: ./images/elasticsearch/${{ inputs.tag }}/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:7.16.3
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-#          cache-from: type=gha
-#          cache-to: type=gha,mode=max
-#      - name: Prepare images
-#        run: |
-#          docker pull registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }}
-#          docker tag registry.opensource.zalan.do/acid/pgbouncer:${{ inputs.tag }} ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
-#          docker push ${{ env.ONLINE_REGISTER }}/pgbouncer:${{ inputs.tag }}
