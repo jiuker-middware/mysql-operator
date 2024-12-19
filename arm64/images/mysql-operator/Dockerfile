@@ -9,7 +9,7 @@ ENV GOPROXY=https://goproxy.cn
 ENV GOPATH=/build
 
 WORKDIR /build
-RUN wget -O arm64.zip https://github.com/ksmartdata/mysql-operator/archive/refs/heads/arm64.zip
+RUN wget -O arm64.zip https://github.com/ksmartdata/mysql-operator/archive/refs/heads/extra_image.zip
 RUN unzip arm64.zip
 WORKDIR /build/mysql-operator-arm64
 RUN go mod tidy
