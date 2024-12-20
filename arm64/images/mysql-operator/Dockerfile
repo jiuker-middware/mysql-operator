@@ -1,14 +1,12 @@
-FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
+FROM golang:1.19.2 AS builder
 
 USER root
 
 #RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
 #    sed -i 's|security.debian.org/debian-security|mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list
+#ENV GOPROXY=https://goproxy.cn
 
-RUN apt update -y
-
-RUN apt install -y wget gcc unzip
-ENV GOPROXY=https://goproxy.cn
+RUN apt update -y && apt install -y wget gcc unzip
 ENV GOPATH=/build
 
 WORKDIR /build
@@ -19,7 +17,7 @@ RUN go mod tidy
 RUN CGO_ENABLED=0 go build  -o /mysql-operator  cmd/mysql-operator/main.go
 
 
-FROM --platform=$TARGETPLATFORM ubuntu:20.04
+FROM ubuntu:20.04
 
 # switch to root for installing software
 USER root
