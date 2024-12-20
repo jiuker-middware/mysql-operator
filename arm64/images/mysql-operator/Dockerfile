@@ -2,6 +2,9 @@ FROM --platform=$TARGETPLATFORM golang:1.19.2 as builder
 
 USER root
 
+#RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
+#    sed -i 's|security.debian.org/debian-security|mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list
+
 RUN apt update -y
 
 RUN apt install -y wget gcc unzip
@@ -11,7 +14,7 @@ ENV GOPATH=/build
 WORKDIR /build
 RUN wget -O arm64.zip https://github.com/ksmartdata/mysql-operator/archive/refs/heads/extra_image.zip
 RUN unzip arm64.zip
-WORKDIR /build/mysql-operator-arm64
+WORKDIR /build/mysql-operator-extra_image
 RUN go mod tidy
 RUN CGO_ENABLED=0 go build  -o /mysql-operator  cmd/mysql-operator/main.go
 
