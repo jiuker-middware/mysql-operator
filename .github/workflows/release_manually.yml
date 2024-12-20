@@ -886,7 +886,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/mysql-operator:${{ github.ref_name }}
+            ${{ env.ONLINE_REGISTER }}/mysql-operator:${{ inputs.tag }}
             ${{ env.ONLINE_REGISTER }}/mysql-operator:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
