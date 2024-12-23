@@ -490,7 +490,7 @@ jobs:
       - name: Clone RocketMQ Operator
         uses: actions/checkout@v2
         with:
-          repository: apache/rocketmq-operator
+          repository: ksmartdata/rocketmq-operator
           ref: master
 
       - name: Set up QEMU
@@ -511,7 +511,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           build-args: |
-            version=${{ inputs.tag }}
+            version=v5.1.4  # 暂时写死
           tags: |
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
           cache-from: type=gha
