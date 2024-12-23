@@ -440,13 +440,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Clone RocketMQ Operator
-#        uses: actions/checkout@v2
-#        with:
-#          repository: apache/rocketmq-operator
-#          ref: master
+      - name: Clone RocketMQ Operator
+        uses: actions/checkout@v2
+        with:
+          repository: ksmartdata/rocketmq-operator
+          ref: master
 
-      # 先暂时用自定义的镜像，待合并上游后，切换 todo(@drivebyer)
       - name: Git clone mysql-operator repo
         uses: actions/checkout@v3
         with:
@@ -470,7 +469,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           build-args: |
-            version=${{ inputs.tag }}
+            version=5.1.4
           tags: |
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
           cache-from: type=gha
@@ -531,7 +530,7 @@ jobs:
       - name: Clone RocketMQ Operator
         uses: actions/checkout@v2
         with:
-          repository: apache/rocketmq-operator
+          repository: ksmartdata/rocketmq-operator
           ref: master
 
       - name: Set up QEMU
@@ -552,7 +551,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           build-args: |
-            version=${{ inputs.tag }}
+            version=5.1.4
           tags: |
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
           cache-from: type=gha
