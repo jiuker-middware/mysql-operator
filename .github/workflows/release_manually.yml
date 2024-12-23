@@ -511,7 +511,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           build-args: |
-            version=5.1.4  # 暂时写死
+            version=5.1.4
           tags: |
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
           cache-from: type=gha
