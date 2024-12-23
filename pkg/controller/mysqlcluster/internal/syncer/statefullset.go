@@ -91,6 +91,11 @@ func NewStatefulSetSyncer(c client.Client, scheme *runtime.Scheme, cluster *mysq
 }
 
 func (s *sfsSyncer) SyncFn(in runtime.Object) error {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Info("recovered from panic: %v", r)
+		}
+	}()
 	out := in.(*apps.StatefulSet)
 
 	s.cluster.Status.ReadyNodes = int(out.Status.ReadyReplicas)
