@@ -394,13 +394,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 使用官方的仓库，需要执行 make generate，但是下载 controller-gen 时不符合预期，所以临时使用 drivebyer/rocketmq-operator 仓库
-      # 待 https://github.com/apache/rocketmq-operator/pull/169 合并和，可以切换回官方仓库
       - name: Clone RocketMQ Operator
         uses: actions/checkout@v2
         with:
-          repository: drivebyer/rocketmq-operator
-          ref: mcamel
+          repository: ksmartdata/rocketmq-operator
+          ref: master
 
       - name: Generate missing files
         run: |
