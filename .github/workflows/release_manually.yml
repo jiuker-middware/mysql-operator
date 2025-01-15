@@ -857,7 +857,9 @@ jobs:
             ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          
   mysql-operator:
+    if: ${{ inputs.job == 'mysql-operator' }}
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
