@@ -584,7 +584,7 @@ jobs:
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
           tags: |
-            ${{ env.ONLINE_REGISTER }}/rclone-mongo:${{ inputs.tag }}
+            ${{ env.ONLINE_REGISTER }}/rocketmq-dashboard:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
