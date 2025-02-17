@@ -583,8 +583,8 @@ jobs:
           annotations: |
             GITHUB_REF: ${{ github.ref }}
             GITHUB_SHA: ${{ github.sha }}
-          context: ./rocketmq-console-schnell18
-          file: ./rocketmq-console-schnell18/Dockerfile
+          context: ./arm64/images/rocketmq-console-schnell18
+          file: ./arm64/images/rocketmq-console-schnell18/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
