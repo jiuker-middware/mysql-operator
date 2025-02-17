@@ -576,7 +576,7 @@ jobs:
         run: |
           # replace FROM centos:7 with FROM --platform=$TARGETPLATFORM centos:7 by sed
           sed -i 's/FROM centos:7/FROM --platform=$TARGETPLATFORM centos:7/g' image-build/Dockerfile-centos-dashboard
-          
+          sed -i 's/openssl, which gnupg, wget/openssl which gnupg wget/' image-build/Dockerfile-centos-dashboard
           # replace 3.6.3 to 3.9.4
           sed -i 's/3.6.3/3.9.4/g' image-build/Dockerfile-centos-dashboard
 
