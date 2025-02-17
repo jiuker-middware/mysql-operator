@@ -469,7 +469,7 @@ jobs:
           build-args: |
             version=5.1.4
           tags: |
-            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -510,7 +510,7 @@ jobs:
           build-args: |
             version=5.1.4
           tags: |
-            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -551,7 +551,7 @@ jobs:
           build-args: |
             version=5.1.4
           tags: |
-            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:v${{ inputs.tag }}
+            ${{ env.ONLINE_REGISTER }}/${{ inputs.job }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
