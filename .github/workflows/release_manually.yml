@@ -399,7 +399,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ksmartdata/rocketmq-operator
-          ref: master
+          # 使用 package 分支，master 分支用来与社区同步
+          ref: package
 
       - name: Generate missing files
         run: |
