@@ -444,7 +444,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ksmartdata/rocketmq-operator
-          ref: master
+          # 使用 package 分支，master 分支用来与社区同步
+          ref: package
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -485,7 +486,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ksmartdata/rocketmq-operator
-          ref: master
+          # 使用 package 分支，master 分支用来与社区同步
+          ref: package
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -526,7 +528,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ksmartdata/rocketmq-operator
-          ref: master
+          # 使用 package 分支，master 分支用来与社区同步
+          ref: package
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
