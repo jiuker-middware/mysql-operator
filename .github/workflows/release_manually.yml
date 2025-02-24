@@ -31,7 +31,7 @@ on:
           - 'mysql-operator-sidecar-80'
           - 'redisinsight'
           - 'mysql-operator'
-          - 'mysqld_exporter'
+          - 'mysqld-exporter'
       upstream-ref:
         description: 'upstream ref'
         required: false
@@ -929,8 +929,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  mysqld_exporter:
-    if: ${{ inputs.job == 'mysqld_exporter' }}
+  mysqld-exporter:
+    if: ${{ inputs.job == 'mysqld-exporter' }}
     runs-on: ubuntu-latest
     steps:
       - name: Git clone mysql-operator repo
@@ -947,14 +947,14 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.0.0
-      - name: mysqld_exporter
+      - name: mysqld-exporter
         uses: docker/build-push-action@v3.1.1
         with:
           annotations: |
             GITHUB_REF: ${{ github.ref }}
             GITHUB_SHA: ${{ github.sha }}
-          context: ./images/mysqld_exporter
-          file: ./images/mysqld_exporter/Dockerfile
+          context: ./images/mysqld-exporter
+          file: ./images/mysqld-exporter/Dockerfile
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push: true
           platforms: ${{ env.BUILD_PLATFORM }}
